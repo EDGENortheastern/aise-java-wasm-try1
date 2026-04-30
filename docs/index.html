@@ -56,12 +56,14 @@
 
         <p id="output">Waiting for a name...</p>
     </main>
-<script src="classes.js"></script>
-<script>
-    document.getElementById("helloButton").addEventListener("click", function () {
-        const name = document.getElementById("nameInput").value;
-        document.getElementById("output").textContent = Main.helloName(name);
-    });
+    <script src="classes.js"></script>
+
+    <script>
+        document.getElementById("helloButton").addEventListener("click", function () {
+            const name = document.getElementById("nameInput").value;
+            document.getElementById("output").textContent = helloName(name);
+        });
+    </script>
 </script>
 </body>
 </html>

@@ -1,44 +1,33 @@
-# Java WebAssembly Hello
+# Java to Browser with TeaVM
 
-A small Java to WebAssembly project. To check what version of Java you have you might use:
+This project shows how to write a Java method and run it in a web browser, step by step.
 
-```bash
-java -version
-```
+Java cannot run in a browser directly. This project uses [TeaVM](https://teavm.org/) to compile Java into JavaScript that the browser can load. The project is built incrementally so each stage is understandable on its own.
 
-or
+---
 
-```bash
-java --version
-```
+## Prerequisites
 
-## Step 1
-
-During this step, a small Java program is created, compiled, and run locally using Maven.
-
-```text
-Hello World from Java 🌸
-```
-
-### What is needed
-
-Before running the project, install:
+Before starting, install the following:
 
 - [Java JDK 17 or later](https://www.oracle.com/uk/java/technologies/downloads)
-- Apache [Maven](https://maven.apache.org/install.html)
-- Visual Studio Code
-- 'Extension Pack for Java' in VS Code
+- [Apache Maven](https://maven.apache.org/install.html)
+- [Visual Studio Code](https://code.visualstudio.com/) with the **Extension Pack for Java**
 
-### Check installation
-
-After installing, check everything is available:
+To verify your installation:
 
 ```bash
 java -version
 mvn -v
 ```
 
-### Project structure at this stage
+---
+
+## Step 1 — Create and run a Java program locally
+
+A minimal Java program is created and run on your machine using Maven.
+
+**Project structure at this stage:**
 
 ```text
 .
@@ -52,45 +41,39 @@ mvn -v
 └── README.md
 ```
 
-### Compile and run
+Maven compiles `.java` source files into `.class` bytecode files that the Java Virtual Machine (JVM) can execute.
 
-Compiling converts Java source code (.java) into bytecode (.class) that can be executed by the Java Virtual Machine (JVM).
-
-**To compile the project:**
+**Compile the project:**
 
 ```bash
 mvn compile
 ```
 
-**To run the code:**
+**Run the program:**
 
 ```bash
 mvn exec:java -Dexec.mainClass="demo.Main"
 ```
 
-## Step 2
-
-During this step, the Java program is updated so that the greeting is produced by a reusable method `helloName(name)`.
-
-This prepares the project for the next stage, where the greeting can be called from a web page.
-
-### Goal
-
-Create a method that can return a greeting using a name.
+**Expected output:**
 
 ```text
-Hello [Learner] from Java 🌸
+Hello World from Java 🌸
 ```
 
-The code:
+---
+
+## Step 2 — Refactor into a reusable method
+
+The greeting logic is moved into a method called `helloName(name)`. This makes it possible to call the same logic from a web page later.
 
 ```java
-package demo; // groups classes together under a name demo
+package demo;
 
 public class Main {
 
     public static String helloName(String name) {
-        if (name == null || name.trim().isEmpty()){
+        if (name == null || name.trim().isEmpty()) {
             return "Hello World from Java 🌸";
         }
         return "Hello " + name + " from Java 🌸";
@@ -100,73 +83,74 @@ public class Main {
         System.out.println(helloName("You"));
     }
 }
-
 ```
 
-### Current limitation
+At this stage the name is still hard-coded (`"You"`). The user cannot enter their own name yet.
 
-At this stage, the name is hard-coded in the program:
+---
 
-```java
-helloName("You")
-```
+## Step 3 — Add a web page
 
-This means the user cannot enter their own name yet.
+A simple HTML page is added to the `docs/` folder. It contains an input field and a button for displaying a personalised greeting.
 
-## Step 3
-
-During this step, a simple web page is added in the `docs/` folder.
-
-The page lets the user enter a name and click a button to display a greeting.
-
-At this stage, the greeting logic is still written in JavaScript. This allows the web page and GitHub Pages deployment to be tested before adding WebAssembly.
-
-**Add a file to:**
+**File added:**
 
 ```text
 docs/index.html
 ```
 
-### Output preview
+The page is served via GitHub Pages (from the `docs/` folder). At this stage the greeting logic is not yet connected to Java — that comes in later steps.
 
-You should see the following when viewing the page using Live Server:
+**Preview:**
 
 ![Hello Java output](docs/assets/helloJava.png)
 
-## Step 4
+---
 
-## Step 4
+## Step 4 — Add temporary JavaScript greeting logic
 
-During this step, temporary JavaScript logic is added to make the web page interactive.
+A JavaScript file is added to make the page interactive. It duplicates the greeting logic from the Java method so the page works before the Java compilation is set up.
 
-The Java method `helloName(name)` already exists, but the browser cannot call it yet.
-
-For now, JavaScript is used to copy the same greeting behaviour in the browser.
-
-### File added
+**File added:**
 
 ```text
 docs/script.js
 ```
 
-## Step 5
+This is a temporary stand-in. The JavaScript version of `helloName` will be replaced once TeaVM compiles the real Java method for the browser.
 
-During this step, TeaVM is added to the Maven project.
+---
 
-TeaVM is used to compile Java bytecode for use in the browser.
+## Step 5 — Compile Java for the browser using TeaVM
 
-### Why this step is needed
+TeaVM is added to the Maven project. It reads the compiled Java bytecode and produces a JavaScript file that the browser can load.
 
-The browser cannot run Java directly.
+**Why TeaVM?**
 
-TeaVM creates browser-ready output from the Java project.
+Browsers cannot run Java bytecode. TeaVM acts as a compiler that translates your Java classes into JavaScript. The `@JSExport` annotation on `helloName` tells TeaVM to make that method available as a global JavaScript function.
 
-### TeaVM Maven plugin
+**TeaVM Maven plugin — [documentation](https://teavm.org/docs/tooling/maven.html)**
 
-**TeaVM Maven plugin's docs:**
+The plugin is configured in `pom.xml` to output a file called `classes.js` into the `docs/` folder:
 
-https://teavm.org/docs/tooling/maven.html
+```xml
+<targetType>JAVASCRIPT</targetType>
+<targetDirectory>docs</targetDirectory>
+<targetFileName>classes.js</targetFileName>
+```
 
-Generate browser-ready files from the Java code.
+**Run TeaVM:**
 
-The temporary JavaScript greeting logic will be replaced later.
+```bash
+mvn teavm:compile
+```
+
+**File produced:**
+
+```text
+docs/classes.js
+```
+
+This file contains the entire Java runtime and your compiled `helloName` method. When `index.html` loads it, `helloName` becomes available as a global function — so the button on the page calls your Java code, running inside the browser.
+
+The temporary `script.js` version is no longer needed once `classes.js` is in place.
