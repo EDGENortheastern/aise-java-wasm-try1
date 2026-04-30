@@ -132,3 +132,19 @@ docs/index.html
 You should see the following when viewing the page using Live Server:
 
 ![Hello Java output](docs/assets/helloJava.png)
+
+## Step 4
+
+## Step 4
+
+During this step, temporary JavaScript logic is added to make the web page interactive.
+
+The Java method `helloName(name)` already exists, but the browser cannot call it yet.
+
+For now, JavaScript is used to copy the same greeting behaviour in the browser.
+
+### File added
+
+```text
+docs/script.js
+```
