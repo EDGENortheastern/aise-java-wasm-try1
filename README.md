@@ -148,3 +148,25 @@ For now, JavaScript is used to copy the same greeting behaviour in the browser.
 ```text
 docs/script.js
 ```
+
+## Step 5
+
+During this step, TeaVM is added to the Maven project.
+
+TeaVM is used to compile Java bytecode for use in the browser.
+
+### Why this step is needed
+
+The browser cannot run Java directly.
+
+TeaVM creates browser-ready output from the Java project.
+
+### TeaVM Maven plugin
+
+**TeaVM Maven plugin's docs:**
+
+https://teavm.org/docs/tooling/maven.html
+
+Generate browser-ready files from the Java code.
+
+The temporary JavaScript greeting logic will be replaced later.
