@@ -112,3 +112,23 @@ helloName("You")
 ```
 
 This means the user cannot enter their own name yet.
+
+## Step 3
+
+During this step, a simple web page is added in the `docs/` folder.
+
+The page lets the user enter a name and click a button to display a greeting.
+
+At this stage, the greeting logic is still written in JavaScript. This allows the web page and GitHub Pages deployment to be tested before adding WebAssembly.
+
+**Add a file to:**
+
+```text
+docs/index.html
+```
+
+### Output preview
+
+You should see the following when viewing the page using Live Server:
+
+![Hello Java output](docs/assets/helloJava.png)
