@@ -1,6 +1,16 @@
 # Java WebAssembly Hello
 
-A small Java to WebAssembly project.
+A small Java to WebAssembly project. To check what version of Java you have you might use:
+
+```bash
+java -version
+```
+
+or
+
+```bash
+java --version
+```
 
 ## Step 1
 
@@ -57,3 +67,48 @@ mvn compile
 ```bash
 mvn exec:java -Dexec.mainClass="demo.Main"
 ```
+
+## Step 2
+
+During this step, the Java program is updated so that the greeting is produced by a reusable method `helloName(name)`.
+
+This prepares the project for the next stage, where the greeting can be called from a web page.
+
+### Goal
+
+Create a method that can return a greeting using a name.
+
+```text
+Hello [Learner] from Java 🌸
+```
+
+The code:
+
+```java
+package demo; // groups classes together under a name demo
+
+public class Main {
+
+    public static String helloName(String name) {
+        if (name == null || name.trim().isEmpty()){
+            return "Hello World from Java 🌸";
+        }
+        return "Hello " + name + " from Java 🌸";
+    }
+
+    public static void main(String[] args) {
+        System.out.println(helloName("You"));
+    }
+}
+
+```
+
+### Current limitation
+
+At this stage, the name is hard-coded in the program:
+
+```java
+helloName("You")
+```
+
+This means the user cannot enter their own name yet.
