@@ -1,25 +1,115 @@
 # Java to Browser with TeaVM
 
-This project shows how to write a Java method and run it in a web browser, step by step.
+## What this repo is actually doing
 
-Java cannot run in a browser directly. This project uses [TeaVM](https://teavm.org/) to compile Java into JavaScript that the browser can load. The project is built incrementally so each stage is understandable on its own.
+This project explores a genuinely weird and interesting idea: what if you could write Java — real Java, with classes and methods and all the things Java people love — and have it run inside a web browser?
+
+Browsers don't speak Java. They never have. The web runs on JavaScript, and for a long time that was the end of the conversation. But a tool called [TeaVM](https://teavm.org/) changes that. It takes your compiled Java bytecode and translates it into JavaScript that any browser can load and run. The Java logic stays Java. TeaVM handles the translation.
+
+This repo builds that idea up step by step. You start with a plain Java method on your machine, and by the end that same method is running in a browser tab — no plugins, no server, no tricks.
 
 ---
 
-## Prerequisites
+## Important: this is Java compiled to JavaScript, not WebAssembly (yet)
 
-Before starting, install the following:
+The name of this repo says `wasm` and that is intentional — it hints at where this is going. But right now, the current state of the code compiles Java to **JavaScript**, not WebAssembly.
 
-- [Java JDK 17 or later](https://www.oracle.com/uk/java/technologies/downloads)
-- [Apache Maven](https://maven.apache.org/install.html)
-- [Visual Studio Code](https://code.visualstudio.com/) with the **Extension Pack for Java**
+Here is what that means in practice:
 
-To verify your installation:
+- **WebAssembly (WASM)** is a binary format that browsers can run at near-native speed. It is the "real" future of running non-JavaScript languages in browsers. TeaVM can target it.
+- **JavaScript** is what TeaVM is currently configured to produce here. It is slower and bulkier than WASM, but it works in every browser with no extra setup.
+
+The `targetType` in `pom.xml` is currently set to `JAVASCRIPT`. Switching it to `WASM` is the natural next step for this project, but it is not done yet. So when you run `mvn teavm:compile`, you get a `classes.js` file, not a `.wasm` file. That JavaScript file contains your compiled Java logic and a small Java runtime bundled together. The browser loads it, and your Java method becomes callable from the web page.
+
+The reason this matters: if you look at the output and think "this doesn't look like WebAssembly", that is correct. It isn't. Not yet.
+
+---
+
+## Prerequisites — what you need installed before anything else
+
+You need two things on your machine: Java 17 and Maven. Here is what each one is and how to get it.
+
+### Java 17
+
+Java is a programming language that has been around since 1995. When you write Java code, you don't compile it directly into machine code for your specific computer. Instead, it compiles into something called **bytecode** — a neutral format that runs on the **Java Virtual Machine (JVM)**. The JVM is a program that lives on your machine and knows how to execute that bytecode. This is why Java has always had the "write once, run anywhere" reputation: the same bytecode runs on Windows, Mac, and Linux as long as the JVM is installed.
+
+Java 17 is a **Long-Term Support (LTS)** release, which means it gets security updates and bug fixes for many years. It is a stable, widely-used version and a sensible choice for any new project.
+
+**To check if you already have Java installed:**
 
 ```bash
 java -version
+```
+
+If you see something like `openjdk version "17.x.x"`, you are good. If you see an older version (11, 8, etc.) or a `command not found` error, you need to install or upgrade.
+
+**Option 1 — Download directly from Oracle:**
+
+Go to [https://www.oracle.com/uk/java/technologies/downloads](https://www.oracle.com/uk/java/technologies/downloads) and download the installer for Java 17. Run it and follow the steps.
+
+**Option 2 — Install via Homebrew (recommended on Mac):**
+
+```bash
+brew install openjdk@17
+```
+
+After installing, follow any instructions Homebrew prints about adding Java to your PATH. It usually looks something like:
+
+```bash
+echo 'export PATH="/opt/homebrew/opt/openjdk@17/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+**Verify after installing:**
+
+```bash
+java -version
+javac -version
+```
+
+Both commands should report version 17. `java` runs programs; `javac` is the compiler that turns your `.java` source files into `.class` bytecode files.
+
+**If you have multiple Java versions installed and need to switch to 17:**
+
+On Mac with Homebrew:
+
+```bash
+export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+```
+
+Add that line to your `~/.zshrc` to make it permanent.
+
+---
+
+### Maven — what it is and what `pom.xml` does
+
+Maven is a **build tool** for Java projects. Without it, compiling and running a Java project involves a lot of manual steps: finding the right `.java` files, running `javac` with the right flags, managing dependencies (external libraries your code needs), and packaging everything up. Maven automates all of that.
+
+You describe your project in a file called `pom.xml` — **Project Object Model** — and Maven reads that file to know what to do. Think of `pom.xml` as the recipe for your project.
+
+Here is what `pom.xml` tells Maven in this project:
+
+- **groupId, artifactId, version** — the identity of the project. `groupId` is like a namespace (usually a reversed domain name, here just `demo`), `artifactId` is the project name, and `version` is the current version.
+
+- **`properties`** — configuration values reused across the file. Here it sets `maven.compiler.source` and `maven.compiler.target` to `17`, which tells Maven to compile the code using Java 17 syntax and produce bytecode compatible with Java 17.
+
+- **`dependencies`** — external libraries your project needs. Maven downloads these automatically from a central registry called [Maven Central](https://central.sonatype.com/). In this project, the dependencies are the TeaVM libraries that let you use `@JSExport` and give you access to the TeaVM standard library.
+
+- **build and plugins** — extra tools that extend Maven's behaviour. The TeaVM Maven plugin is configured here. It tells Maven: when `mvn teavm:compile` is run, use TeaVM to compile the `demo.Main` class and write the output to the `docs/` folder as a file called `classes.js`.
+
+**To check if Maven is installed:**
+
+```bash
 mvn -v
 ```
+
+**To install Maven on Mac via Homebrew:**
+
+```bash
+brew install maven
+```
+
+**To install Maven manually:** download the binary from [https://maven.apache.org/install.html](https://maven.apache.org/install.html), unzip it, and add the `bin` folder to your PATH.
 
 ---
 

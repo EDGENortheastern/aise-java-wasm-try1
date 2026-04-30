@@ -38,7 +38,7 @@ CM([E,0,0,[],0,3,0,0,["e",G(Ce),"b",G(BV)],S,0,E,[],0,3,0,0,["g",G(Do),"L",G(Cg)
 0,3,0,0,0,Y,0,E,[],3,3,0,0,0,Bl,0,E,[Y],1,3,0,0,0,V,0,E,[],3,3,0,0,0,B5,0,Bl,[V],0,3,0,Bg,0,CZ,0,E,[],4,3,0,0,0,Df,0,E,[],4,3,0,0,0,Bx,0,E,[V],0,3,0,Bv,0,Cw,0,E,[V],1,3,0,0,0,Ds,0,E,[],4,3,0,0,0,Bq,0,E,[],3,3,0,0,0,U,0,E,[Y,Bq],0,0,0,0,["c",G(Bp),"q",H(Bj),"I",H(B0),"w",M(BH),"r",M(B6),"t",H(BM),"e",G(Cm)],CG,0,E,[],0,3,0,0,0,CF,0,E,[],4,3,0,0,0,J,0,E,[Y,V,Bq],0,3,0,Q,["c",G(Cb),"p",H(BI),"B",H(BZ),"z",BU(Ch),"v",H(Dq),"u",G(CB),"s",G(Co),"C",M(Dj),"D",G(CI),"e",G(Dg)],CP,0,E,[],4,3,0,0,0,Ca,0,Be,[],0,3,0,0,
 ["c",G(Cn)],B7,0,E,[],0,3,0,W,0,CX,0,E,[],0,3,0,0,0,Cu,0,E,[],4,3,0,0,0,BQ,0,E,[],3,3,0,0,0,C2,0,E,[],0,3,0,0,0,B$,0,E,[],3,3,0,0,0,Ci,0,E,[B$],0,3,0,0,["c",G(Cj)],BE,0,E,[],3,3,0,0,0,BP,0,E,[BE,BQ],4,3,0,0,0,BY,0,U,[BC],0,3,0,0,["c",G(Cd),"d",H(R),"J",M(CA),"K",M(CK),"e",G(Bt),"t",H(CR),"r",M(Dc),"w",M(Dd)]]);
 let Da=Bs(BG);
-C4(["<java_object>@","\n","null","0","Hello "," from Java \ud83c\udf38","Hello World from Java \ud83c\udf38","You"]);
+C4(["<java_object>@","\n","null","0","☕\ud83d\ude80✨\ud83c\udf89\ud83c\udf3a Hello "," — built in Java! ☕\ud83d\ude80✨\ud83c\udf89\ud83c\udf3a","☕\ud83d\ude80✨\ud83c\udf89\ud83c\udf3a Hello World — built in Java! ☕\ud83d\ude80✨\ud83c\udf89\ud83c\udf3a","You"]);
 J.prototype.toString=function(){return Bb(this);};
 J.prototype.valueOf=J.prototype.toString;E.prototype.toString=function(){return Bb(Ce(this));};
 E.prototype.__teavm_class__=function(){return De(this);};
